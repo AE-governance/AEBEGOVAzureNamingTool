@@ -5,6 +5,7 @@
 @using System.Runtime.Caching;
 @using AzureNamingTool.Services;
 @using Blazored.Toast.Configuration;
+@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Html
 @using Microsoft.AspNetCore.WebUtilities
 @using Microsoft.Extensions.Logging
@@ -16,6 +17,7 @@
 @inject IToastService toastService
 @inject NavigationManager NavigationManager
 @inject ProtectedLocalStorage storage
+@inject CustomAuthStateProvider authStateProvider
 
 <PageTitle>Azure Naming Tool - Admin</PageTitle>
 <div class="card  @theme.ThemeStyle">
@@ -826,8 +828,8 @@
             releasenotesurl = "https://github.com/mspnp/AzureNamingTool/wiki/v" + appversion;
 
             servicesData = await ServicesHelper.LoadServicesData(servicesData, true);
-            var result = await session.GetAsync<bool>("admin");
-            admin = (bool)result.Value;
+            
+            admin = await authStateProvider.IsAdmin();
             if (admin)
             {
                 currentapikey = GeneralHelper.DecryptString(config.APIKey!, config.SALTKey!);

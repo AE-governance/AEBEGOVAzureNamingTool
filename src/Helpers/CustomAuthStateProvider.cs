@@ -36,5 +36,14 @@ namespace AzureNamingTool.Helpers
             NotifyAuthenticationStateChanged(
                 Task.FromResult(new AuthenticationState(user)));
         }
+
+
+        /// <summary>
+        /// Checks if the user is an administrator.
+        /// </summary>
+        public async Task<bool> IsAdmin() {
+            AuthenticationState authState = await GetAuthenticationStateAsync();
+            return authState.User.IsInRole("Admin");
+        }
     }
 }

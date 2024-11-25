@@ -5,6 +5,9 @@ using AzureNamingTool.Models;
 using BlazorDownloadFile;
 using Blazored.Modal;
 using Blazored.Toast;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -25,9 +28,6 @@ builder.Services.AddRazorComponents()
 
 
 builder.Services.AddHealthChecks();
-builder.Services.AddBlazorDownloadFile();
-builder.Services.AddBlazoredToast();
-builder.Services.AddBlazoredModal();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSingleton<StateContainer>();
@@ -54,6 +54,21 @@ builder.Services.AddBlazoredModal();
 builder.Services.AddMemoryCache();
 builder.Services.AddMvcCore().AddApiExplorer();
 
+// Add Entra authentication
+builder.Services.AddAuthorization();
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+var tenantId = builder.Configuration.GetValue<string>("AzureAd:TenantId")!;
+var vaultUri = builder.Configuration.GetValue<string>("AzureAd:VaultUri")!;
+var secretName = builder.Configuration.GetValue<string>("AzureAd:SecretName")!;
+
+builder.Services.Configure<MicrosoftIdentityOptions>(
+    OpenIdConnectDefaults.AuthenticationScheme,
+    options =>
+    {
+        options.ClientSecret = 
+            AzureHelper.GetKeyVaultSecret(tenantId, vaultUri, secretName);
+    });
 var app = builder.Build();
 
 app.MapHealthChecks("/healthcheck/ping");

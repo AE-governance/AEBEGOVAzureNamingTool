@@ -6,6 +6,7 @@ namespace AzureNamingTool.Helpers
     /// <summary>
     /// Custom authentication state provider for handling user authentication state.
     /// </summary>
+    // TODO remove this and just use the default one?
     public class CustomAuthStateProvider : AuthenticationStateProvider
     {
         /// <summary>

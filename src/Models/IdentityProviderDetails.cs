@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using AzureNamingTool.Helpers;
 
 namespace AzureNamingTool.Models
 {
@@ -28,7 +29,14 @@ namespace AzureNamingTool.Models
         /// <remarks>
         /// Returns true if the CurrentClaimsPrincipal is not null and the user has the admin claim.
         /// </remarks>
-        // TODO set correct admin claim value
-        public bool IsAdmin { get => CurrentClaimsPrincipal != null && CurrentClaimsPrincipal.HasClaim(c => c.Type == "roles" && c.Value == "admin"); }
+        public bool IsAdmin
+        {
+            get
+            {
+                return CurrentClaimsPrincipal != null &&
+                CurrentClaimsPrincipal.HasClaim(c => c.Type == ConfigurationHelper.GetAppSetting("AdminClaimType", false) &&
+                c.Value == ConfigurationHelper.GetAppSetting("AdminClaimValue", false));
+            }
+        }
     }
 }

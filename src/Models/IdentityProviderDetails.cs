@@ -17,6 +17,18 @@ namespace AzureNamingTool.Models
         /// </summary>
         public string CurrentIdentityProvider { get; set; } = String.Empty;
 
+        /// <summary>
+        /// Gets or sets the current claims principal.
+        /// </summary>
         public ClaimsPrincipal? CurrentClaimsPrincipal { get; set; }
+
+        /// <summary>
+        /// Gets a flag indicating whether the current user is an admin.
+        /// </summary>
+        /// <remarks>
+        /// Returns true if the CurrentClaimsPrincipal is not null and the user has the admin claim.
+        /// </remarks>
+        // TODO set correct admin claim value
+        public bool IsAdmin { get => CurrentClaimsPrincipal != null && CurrentClaimsPrincipal.HasClaim(c => c.Type == "roles" && c.Value == "admin"); }
     }
 }

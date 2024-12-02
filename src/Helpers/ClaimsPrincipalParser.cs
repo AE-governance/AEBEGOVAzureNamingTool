@@ -5,6 +5,9 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using AzureNamingTool.Helpers;
+using AzureNamingTool.Models;
+using AzureNamingTool.Services;
 using Microsoft.AspNetCore.Http;
 
 // https://learn.microsoft.com/en-us/azure/app-service/configure-authentication-user-identities#decoding-the-client-principal-header
@@ -40,7 +43,7 @@ public static class ClaimsPrincipalParser
     /// <returns>A ClaimsPrincipal object.</returns>
     public static ClaimsPrincipal? Parse(HttpRequest req)
     {
-        if (req.Headers.TryGetValue("x-ms-client-principal", out var header))
+        if (req.Headers.TryGetValue(ConfigurationHelper.GetAppSetting("IdentityHeaderFull", true), out var header))
         {
             var principal = new ClientPrincipal();
 
@@ -50,6 +53,7 @@ public static class ClaimsPrincipalParser
             {
                 return null;
             }
+            try {
             var decoded = Convert.FromBase64String(data);
             var json = Encoding.UTF8.GetString(decoded);
             principal = JsonSerializer.Deserialize<ClientPrincipal>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -69,6 +73,11 @@ public static class ClaimsPrincipalParser
             identity.AddClaims(principal.Claims.Select(c => new Claim(c.Type, c.Value)));
 
             return new ClaimsPrincipal(identity);
+            } catch (Exception ex) {
+                // Log the exception
+                AdminLogService.PostItem(new AdminLogMessage() { Title = "ERROR", Message = ex.Message });
+                return null;
+            }
         }
         return null;
     }

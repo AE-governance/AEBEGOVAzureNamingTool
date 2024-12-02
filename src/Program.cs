@@ -57,7 +57,6 @@ builder.Services.AddMvcCore().AddApiExplorer();
 // Add Entra authentication
 builder.Services.AddAuthorization();
 builder.Services.AddCascadingAuthenticationState();
-builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 var tenantId = builder.Configuration.GetValue<string>("AzureAd:TenantId")!;
 var vaultUri = builder.Configuration.GetValue<string>("AzureAd:VaultUri")!;
 var secretName = builder.Configuration.GetValue<string>("AzureAd:SecretName")!;

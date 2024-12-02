@@ -1,4 +1,6 @@
-﻿namespace AzureNamingTool.Models
+﻿using System.Security.Claims;
+
+namespace AzureNamingTool.Models
 {
     /// <summary>
     /// Represents the details of an identity provider.
@@ -14,5 +16,7 @@
         /// Gets or sets the current identity provider.
         /// </summary>
         public string CurrentIdentityProvider { get; set; } = String.Empty;
+
+        public ClaimsPrincipal? CurrentClaimsPrincipal { get; set; }
     }
 }

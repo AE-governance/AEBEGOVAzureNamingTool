@@ -40,6 +40,7 @@
                         {
                             // Set the current user
                             identityProviderDetails.CurrentUser = httpContextAccessor.HttpContext.Request.Headers[headername]!;
+                            Console.WriteLine($"DEBUG - Current user set to {identityProviderDetails.CurrentUser} in App.razor");
                         }
                     }
                 }

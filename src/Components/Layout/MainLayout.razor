@@ -26,23 +26,32 @@
         <div class="top-row px-4 auth @theme.ThemeStyle">
             @if (!String.IsNullOrEmpty(currentuser))
             {
-                if (currentuser != "System")
-                {
                     <div class="w-100">
                         @(
                             "User: " + currentuser
                             )
                     </div>
-                }
+                
             }
             @if (admin)
             {
-                @if (!String.IsNullOrEmpty(feedbackurl))
+                    <div class="w-100">
+                        @(
+                            "Admin user"
+                            )
+                    </div>
+                @* @if (!String.IsNullOrEmpty(feedbackurl))
                 {
                     <div class="ms-3">
                         <button type="button" class="btn btn-success" @onclick="@(e => ShowFeedback())" title="Want to give feedback?">Feedback</button>
                     </div>
-                }
+                } *@
+            } else {
+                <div class="w-100">
+                    @(
+                        "Standard user"
+                        )
+                </div>
             }
             @if (!String.IsNullOrEmpty(currentuser))
             {
@@ -112,8 +121,10 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var adminresult = await session.GetAsync<bool>("admin");
-        admin = (bool)adminresult.Value;
+        // var adminresult = await session.GetAsync<bool>("admin");
+        // admin = (bool)adminresult.Value;
+        admin = identityProviderDetails?.IsAdmin ?? false;
+        await session.SetAsync("admin", admin);
         // Set the current user
         var currentuservalue = await session.GetAsync<string>("currentuser");
         if (!String.IsNullOrEmpty(currentuservalue.Value))
@@ -122,19 +133,32 @@
         }
         if (firstRender)
         {
+            Console.WriteLine($"DEBUG - Starting first render in MainLayout.razor.");
             admin = identityProviderDetails?.IsAdmin ?? false;
             await session.SetAsync("admin", admin);
+            Console.WriteLine($"DEBUG - Persisted admin state to ProtectedSessionStorage: {admin}");
+
+            currentuser = identityProviderDetails?.CurrentUser;
+            if (String.IsNullOrEmpty(currentuser))
+            {
+                currentuser = "System";
+            }
+            await session.SetAsync("currentuser", currentuser);
             // Check if the user has manually logged out. If so, don't attempt to identity them.
             var logout = await session.GetAsync<bool>("logout");
-            if (!(bool)logout.Value)
+            bool logoutvalue = logout.Value;
+            Console.WriteLine($"DEBUG - Logout value: {logoutvalue}");
+            if (!logoutvalue)
             {
                 // Check if site is using an identity provider
                 if (GeneralHelper.IsNotNull(identityProviderDetails))
                 {
+                    Console.WriteLine($"DEBUG - IdentityProviderDetails is not null in MainLayout.razor.");
                     if (!String.IsNullOrEmpty(identityProviderDetails.CurrentUser))
                     {
                         if (identityProviderDetails.CurrentUser != "System")
                         {
+                            Console.WriteLine($"DEBUG - Current user is not System.");
                             // Show working modal
                             var workingmodalparameters = new ModalParameters();
                             workingmodalparameters.Add("message", "Authentication sync in progress...");
@@ -154,7 +178,6 @@
                                 await session.SetAsync("currentuser", currentuser);
 
                                 IEnumerable<Claim> claims = [];
-                                @* remove claims *@
                                 await session.SetAsync("claims", claims);
                                 if (identityProviderDetails.CurrentClaimsPrincipal != null)
                                 {

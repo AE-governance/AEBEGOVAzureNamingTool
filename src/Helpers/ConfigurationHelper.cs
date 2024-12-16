@@ -24,7 +24,9 @@ namespace AzureNamingTool.Helpers
         {
             AllowTrailingCommas = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true
+            PropertyNameCaseInsensitive = true,
+            WriteIndented = true,
+            ReferenceHandler = ReferenceHandler.Preserve,
         };
 
         /// <summary>

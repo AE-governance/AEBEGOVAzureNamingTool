@@ -1,5 +1,6 @@
 ﻿using AzureNamingTool.Models;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace AzureNamingTool.Helpers
 {
@@ -15,7 +16,9 @@ namespace AzureNamingTool.Helpers
         {
             AllowTrailingCommas = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true
+            PropertyNameCaseInsensitive = true,
+            WriteIndented = true,
+            ReferenceHandler = ReferenceHandler.Preserve,
         };
 
         /// <summary>

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using ResourceType = AzureNamingTool.Models.ResourceType;
 
 namespace AzureNamingTool.Services
@@ -325,7 +326,9 @@ namespace AzureNamingTool.Services
                             JsonSerializerOptions options = new()
                             {
                                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                                PropertyNameCaseInsensitive = true
+                                PropertyNameCaseInsensitive = true,
+                                WriteIndented = true,
+                                ReferenceHandler = ReferenceHandler.Preserve,
                             };
 
                             newtypes = JsonSerializer.Deserialize<List<ResourceType>>(refreshdata, options);

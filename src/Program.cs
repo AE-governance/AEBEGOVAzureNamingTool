@@ -53,12 +53,17 @@ builder.Services.AddBlazorDownloadFile();
 builder.Services.AddBlazoredToast();
 builder.Services.AddBlazoredModal();
 builder.Services.AddMemoryCache();
-builder.Services.AddMvcCore().AddApiExplorer();
+builder.Services.AddMvcCore().AddApiExplorer().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    options.JsonSerializerOptions.WriteIndented = true;
+});
+
 
 // Json loop fix
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
     options.JsonSerializerOptions.WriteIndented = true;
 });
 

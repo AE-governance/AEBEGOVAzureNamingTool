@@ -260,7 +260,8 @@ namespace AzureNamingTool.Services
                 }
                 var jsonWriteOptions = new JsonSerializerOptions()
                 {
-                    WriteIndented = true
+                    WriteIndented = true,
+                    ReferenceHandler = ReferenceHandler.Preserve,
                 };
                 jsonWriteOptions.Converters.Add(new JsonStringEnumConverter());
 

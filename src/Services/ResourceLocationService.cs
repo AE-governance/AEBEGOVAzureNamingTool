@@ -1,6 +1,7 @@
 ﻿using AzureNamingTool.Helpers;
 using AzureNamingTool.Models;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace AzureNamingTool.Services
 {
@@ -277,7 +278,9 @@ namespace AzureNamingTool.Services
                             var options = new JsonSerializerOptions
                             {
                                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                                PropertyNameCaseInsensitive = true
+                                PropertyNameCaseInsensitive = true,
+                                WriteIndented = true,
+                                ReferenceHandler = ReferenceHandler.Preserve,
                             };
 
                             newlocations = JsonSerializer.Deserialize<List<ResourceLocation>>(refreshdata, options);

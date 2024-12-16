@@ -98,7 +98,9 @@ namespace AzureNamingTool.Helpers
             {
                 var options = new JsonSerializerOptions
                 {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    WriteIndented = true,
+                    ReferenceHandler = ReferenceHandler.Preserve,
                 };
 
                 await FileSystemHelper.WriteFile(configFileName, JsonSerializer.Serialize(configdata, options));

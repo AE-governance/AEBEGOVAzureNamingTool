@@ -443,7 +443,8 @@ namespace AzureNamingTool.Helpers
 
             JsonSerializerOptions jsonWriteOptions = new()
             {
-                WriteIndented = true
+                WriteIndented = true,
+                ReferenceHandler = ReferenceHandler.Preserve,
             };
             jsonWriteOptions.Converters.Add(new JsonStringEnumConverter());
 

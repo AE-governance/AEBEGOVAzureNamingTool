@@ -56,7 +56,14 @@ public static class ClaimsPrincipalParser
                 var json = Encoding.UTF8.GetString(decoded);
                 Console.WriteLine($"DEBUG - X-MS-CLIENT-PRINCIPAL JSON: {json}");
                 // manually parse the json because of nested loop error
-                var jsonObject = JsonDocument.Parse(json).RootElement;
+                                            var options = new JsonSerializerOptions
+                            {
+                                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                                PropertyNameCaseInsensitive = true,
+                                WriteIndented = true,
+                                ReferenceHandler = ReferenceHandler.Preserve,
+                            };
+                var jsonObject = JsonSerializer.Deserialize<JsonElement>(json, options);
                 List<ClientPrincipalClaim> claims = [];
                 var claimsJsonArray = jsonObject.GetProperty("claims").EnumerateArray();
                 Console.WriteLine($"DEBUG - Claims array length: {claimsJsonArray.Count()}");

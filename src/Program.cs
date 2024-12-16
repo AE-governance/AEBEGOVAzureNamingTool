@@ -5,11 +5,20 @@ using AzureNamingTool.Models;
 using BlazorDownloadFile;
 using Blazored.Modal;
 using Blazored.Toast;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Set GLOBAL json parse options
+builder.Services.Configure<JsonSerializerOptions>(options =>
+{
+    options.PropertyNameCaseInsensitive = true;
+    options.ReferenceHandler = ReferenceHandler.Preserve;
+});
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -22,6 +31,11 @@ builder.Services.AddRazorComponents()
         options.MaximumParallelInvocationsPerClient = 1;
         options.MaximumReceiveMessageSize = 102400000;
         options.StreamBufferCapacity = 10;
+    }).Services.Configure<JsonOptions>(options =>
+    {
+        // Configure ServerComponentSerializer JSON options
+        options.SerializerOptions.PropertyNameCaseInsensitive = true;
+        options.SerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
     });
 
 
@@ -61,11 +75,11 @@ builder.Services.AddMemoryCache();
 
 
 // // Json loop fix
-// builder.Services.AddControllers().AddJsonOptions(options =>
-// {
-//     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-//     options.JsonSerializerOptions.WriteIndented = true;
-// });
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    options.JsonSerializerOptions.WriteIndented = true;
+});
 
 var app = builder.Build();
 

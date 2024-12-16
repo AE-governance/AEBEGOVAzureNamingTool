@@ -14,6 +14,8 @@ In Azure App Service env vars moet toegevoegd worden bij deployment:
 
 Daarnaast moet er een claim met een bepaald type en value toegevoegd worden aan de token voor de user die admin moet zijn (via Azure). Dit moet dus matchen met de env vars die worden ingesteld.
 
+Voorbeeld docs: https://learn.microsoft.com/en-us/entra/identity-platform/optional-claims?tabs=appui#configure-optional-claims-in-your-application
+
 #### Extra TODO's
 * Er is geen deftige logging library met log levels opgezet op dit moment. Er is een hoop extra debug logging toegevoegd via `Console.WriteLine($"DEBUG - ...")`. Dit moet aangepast worden voor dit naar PROD gaat.
 * Er is nog wat functionaliteit van de oude admin setup over in combinatie met de REST API. Dit moet bekeken worden of dit wordt aangepast of geschrapt.

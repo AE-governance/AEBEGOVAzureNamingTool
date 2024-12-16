@@ -110,7 +110,7 @@
         PageType = (this.Body!.Target as RouteView)?.RouteData.PageType!;
     }
 
-    protected override  async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         // Check that the Global admin password is set
         if (!state.Password)
@@ -119,7 +119,6 @@
         }
         currentuser = identityProviderDetails?.CurrentUser;
         admin = state.Admin;
-        await session.SetAsync("admin", admin);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

@@ -38,6 +38,13 @@ builder.Services.AddRazorComponents()
         options.SerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
     });
 
+// Configure HttpClient JSON options
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.SerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    options.SerializerOptions.PropertyNameCaseInsensitive = true;
+    options.SerializerOptions.WriteIndented = true;
+});
 
 // builder.Services.AddHealthChecks();
 builder.Services.AddBlazorDownloadFile();

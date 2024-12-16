@@ -54,31 +54,31 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSingleton<StateContainer>();
 
-// builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen(c =>
-// {
-//     c.OperationFilter<CustomHeaderSwaggerAttribute>();
-//     c.SwaggerDoc("v1", new OpenApiInfo
-//     {
-//         Version = "v" + ConfigurationHelper.GetAssemblyVersion(),
-//         Title = "Azure Naming Tool API",
-//         Description = "An ASP.NET Core Web API for managing the Azure Naming tool configuration. All API requests require the configured API Keys (found in the site Admin configuration). You can find more details in the <a href=\"https://github.com/mspnp/AzureNamingTool/wiki/Using-the-API\" target=\"_new\">Azure Naming Tool API documentation</a>."
-//     });
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.OperationFilter<CustomHeaderSwaggerAttribute>();
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v" + ConfigurationHelper.GetAssemblyVersion(),
+        Title = "Azure Naming Tool API",
+        Description = "An ASP.NET Core Web API for managing the Azure Naming tool configuration. All API requests require the configured API Keys (found in the site Admin configuration). You can find more details in the <a href=\"https://github.com/mspnp/AzureNamingTool/wiki/Using-the-API\" target=\"_new\">Azure Naming Tool API documentation</a>."
+    });
 
-//     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-//     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-// });
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
 
 // Add services to the container
 builder.Services.AddBlazorDownloadFile();
 builder.Services.AddBlazoredToast();
 builder.Services.AddBlazoredModal();
 builder.Services.AddMemoryCache();
-// builder.Services.AddMvcCore().AddApiExplorer().AddJsonOptions(options =>
-// {
-//     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-//     options.JsonSerializerOptions.WriteIndented = true;
-// });
+builder.Services.AddMvcCore().AddApiExplorer().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    options.JsonSerializerOptions.WriteIndented = true;
+});
 
 
 // // Json loop fix
@@ -90,7 +90,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 var app = builder.Build();
 
-// app.MapHealthChecks("/healthcheck/ping");
+app.MapHealthChecks("/healthcheck/ping");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -100,8 +100,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-// app.UseSwagger();
-// app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "AzureNamingToolAPI"));
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "AzureNamingToolAPI"));
 
 app.UseHttpsRedirection();
 

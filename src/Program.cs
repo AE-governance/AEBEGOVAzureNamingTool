@@ -25,7 +25,7 @@ builder.Services.AddRazorComponents()
     });
 
 
-builder.Services.AddHealthChecks();
+// builder.Services.AddHealthChecks();
 builder.Services.AddBlazorDownloadFile();
 builder.Services.AddBlazoredToast();
 builder.Services.AddBlazoredModal();
@@ -53,23 +53,23 @@ builder.Services.AddBlazorDownloadFile();
 builder.Services.AddBlazoredToast();
 builder.Services.AddBlazoredModal();
 builder.Services.AddMemoryCache();
-builder.Services.AddMvcCore().AddApiExplorer().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-    options.JsonSerializerOptions.WriteIndented = true;
-});
+// builder.Services.AddMvcCore().AddApiExplorer().AddJsonOptions(options =>
+// {
+//     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+//     options.JsonSerializerOptions.WriteIndented = true;
+// });
 
 
-// Json loop fix
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-    options.JsonSerializerOptions.WriteIndented = true;
-});
+// // Json loop fix
+// builder.Services.AddControllers().AddJsonOptions(options =>
+// {
+//     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+//     options.JsonSerializerOptions.WriteIndented = true;
+// });
 
 var app = builder.Build();
 
-app.MapHealthChecks("/healthcheck/ping");
+// app.MapHealthChecks("/healthcheck/ping");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -90,9 +90,9 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-app.UseStatusCodePagesWithRedirects("/404");
+// app.UseStatusCodePagesWithRedirects("/404");
 
-app.MapControllers();
+// app.MapControllers();
 app.Run();
 
 

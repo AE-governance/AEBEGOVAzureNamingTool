@@ -46,7 +46,7 @@ builder.Services.Configure<JsonOptions>(options =>
     options.SerializerOptions.WriteIndented = true;
 });
 
-// builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks();
 builder.Services.AddBlazorDownloadFile();
 builder.Services.AddBlazoredToast();
 builder.Services.AddBlazoredModal();
@@ -111,9 +111,9 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-// app.UseStatusCodePagesWithRedirects("/404");
+app.UseStatusCodePagesWithRedirects("/404");
 
-// app.MapControllers();
+app.MapControllers();
 app.Run();
 
 

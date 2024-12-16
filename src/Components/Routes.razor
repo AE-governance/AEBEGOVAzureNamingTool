@@ -1,7 +1,5 @@
 ﻿@using AzureNamingTool.Models
-@inject IdentityProviderDetails identityProviderDetails
 
-<CascadingValue Value="identityProviderDetails">
     <CascadingBlazoredModal>
         <Router AppAssembly="@typeof(Program).Assembly">
             <Found Context="routeData">
@@ -10,4 +8,3 @@
             </Found>
         </Router>
     </CascadingBlazoredModal>
-</CascadingValue>

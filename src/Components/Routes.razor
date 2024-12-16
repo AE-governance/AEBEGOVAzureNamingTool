@@ -1,5 +1,6 @@
 ﻿@using AzureNamingTool.Models
 
+<CascadingValue Value="identityProviderDetails">
     <CascadingBlazoredModal>
         <Router AppAssembly="@typeof(Program).Assembly">
             <Found Context="routeData">
@@ -8,3 +9,8 @@
             </Found>
         </Router>
     </CascadingBlazoredModal>
+</CascadingValue>
+@code {
+    [Parameter]
+    public IdentityProviderDetails? identityProviderDetails { get; set; }
+}

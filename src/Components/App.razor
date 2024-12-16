@@ -3,8 +3,6 @@
 @inject StateContainer state
 @inject IConfiguration configuration;
 @inject IHttpContextAccessor httpContextAccessor;
-@inject IdentityProviderDetails identityProviderDetails;
-
 @{
     //Layout = "_Layout";
 
@@ -12,6 +10,7 @@
     ConfigurationHelper.VerifyConfiguration(state);
     ConfigurationHelper.VerifySecurity(state);
 
+    var identityProviderDetails = new IdentityProviderDetails(configuration);
     //Check if there is an HttpContext object
     if (GeneralHelper.IsNotNull(httpContextAccessor))
     {
@@ -81,7 +80,7 @@
 </head>
 
 <body>
-    <Routes @rendermode="InteractiveServer" />
+    <Routes @rendermode="InteractiveServer" identityProviderDetails="identityProviderDetails" />
     <script src="_framework/blazor.web.js"></script>
     <script src="js/jquery-3.7.0.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>

@@ -110,13 +110,16 @@
         PageType = (this.Body!.Target as RouteView)?.RouteData.PageType!;
     }
 
-    protected override void OnInitialized()
+    protected override  async Task OnInitializedAsync()
     {
         // Check that the Global admin password is set
         if (!state.Password)
         {
             OpenPasswordModal();
         }
+        currentuser = identityProviderDetails?.CurrentUser;
+        admin = state.Admin;
+        await session.SetAsync("admin", admin);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -126,7 +129,7 @@
         bool identityProviderDetailsNotNull = GeneralHelper.IsNotNull(identityProviderDetails);
         Console.WriteLine($"DEBUG - IdentityProviderDetails in MainLayout.razor != null is {identityProviderDetailsNotNull}");
     
-        admin = identityProviderDetails?.IsAdmin ?? false;
+        admin = state.Admin;
         await session.SetAsync("admin", admin);
         Console.WriteLine($"DEBUG - Persisted admin state to ProtectedSessionStorage: {admin}");
         // Set the current user
@@ -197,9 +200,6 @@
                                 // Log the user access
                                 AdminLogService.PostItem(new AdminLogMessage() { Title = "INFORMATION", Message = "User accessed the site.", Source = currentuser });
 
-                                // CHeck if the user is an admin
-                                @* admin = await IdentityHelper.IsAdminUser(state, session, currentuser); *@
-                                // Close modal
                                 workingmodal.Close();
                             }
                         }

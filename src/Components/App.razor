@@ -58,6 +58,7 @@
                     {
                         Console.WriteLine($"DEBUG - Found header X-MS-CLIENT-PRINCIPAL");
                         identityProviderDetails.CurrentClaimsPrincipal = ClaimsPrincipalParser.Parse(httpContextAccessor.HttpContext.Request);
+                        state.SetAdmin(identityProviderDetails.IsAdmin);
                     }
                 }
             }

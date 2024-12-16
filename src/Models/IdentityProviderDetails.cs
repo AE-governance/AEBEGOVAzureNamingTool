@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using System.Text.Json.Serialization;
 using AzureNamingTool.Helpers;
 
 namespace AzureNamingTool.Models
@@ -24,6 +25,7 @@ namespace AzureNamingTool.Models
         /// <summary>
         /// Gets or sets the current claims principal.
         /// </summary>
+        [JsonIgnore]
         public ClaimsPrincipal? CurrentClaimsPrincipal { get; set; }
 
         /// <summary>

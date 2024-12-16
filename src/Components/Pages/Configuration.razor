@@ -2090,6 +2090,7 @@
         {
             var result = await session.GetAsync<bool>("admin");
             admin = (bool)result.Value;
+            admin = state.Admin;
             servicesData = await ServicesHelper.LoadServicesData(servicesData, admin);
 
             // Get the list of categories

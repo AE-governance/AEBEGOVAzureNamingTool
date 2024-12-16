@@ -161,6 +161,7 @@
         {
             var result = await session.GetAsync<bool>("admin");
             admin = (bool)result.Value;
+            admin = state.Admin;
             if (!admin)
             {
                 NavigationManager.NavigateTo("");

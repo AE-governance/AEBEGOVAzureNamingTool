@@ -184,6 +184,8 @@
     {
         var result = await session.GetAsync<bool>("admin");
         admin = (bool)result.Value;
+        // Override from state container
+        admin = state.Admin;
         if (firstRender)
         {
             if (await ConfigurationHelper.VerifyConnectivity())

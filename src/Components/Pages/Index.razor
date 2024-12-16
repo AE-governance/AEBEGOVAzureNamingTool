@@ -104,6 +104,7 @@
             admin = (bool)resultAdmin.Value;
             StateHasChanged();
         }
+        admin = state.Admin;
         // Determine if the version notification has been dismissed
         var resultNotification = await session.GetAsync<bool>("versionnotification");
         bool notificationshown = resultNotification.Success ? resultNotification.Value : false;

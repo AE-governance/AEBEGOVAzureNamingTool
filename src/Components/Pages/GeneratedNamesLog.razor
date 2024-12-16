@@ -208,6 +208,7 @@
         {
             var result = await session.GetAsync<bool>("admin");
             admin = (bool)result.Value;
+            admin = state.Admin;
             if (!Convert.ToBoolean(config.GeneratedNamesLogEnabled) && !admin)
             {
                 toastService.ShowWarning("The Generated Names Log is disabled in the site settings.");

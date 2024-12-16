@@ -53,6 +53,7 @@ builder.Services.AddBlazoredModal();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSingleton<StateContainer>();
+builder.Services.AddScoped<IdentityProviderDetails>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

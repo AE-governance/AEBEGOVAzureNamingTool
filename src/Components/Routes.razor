@@ -1,4 +1,5 @@
 ﻿@using AzureNamingTool.Models
+@inject IdentityProviderDetails identityProviderDetails
 
 <CascadingValue Value="identityProviderDetails">
     <CascadingBlazoredModal>
@@ -10,7 +11,3 @@
         </Router>
     </CascadingBlazoredModal>
 </CascadingValue>
-@code {
-    [Parameter]
-    public IdentityProviderDetails? identityProviderDetails { get; set; }
-}

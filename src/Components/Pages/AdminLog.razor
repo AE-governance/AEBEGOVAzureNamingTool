@@ -154,31 +154,26 @@
     public DateTime enddate { get; set; } = DateTime.Today;
     private string currentuser = String.Empty;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnInitializedAsync()
     {
         currentuser = await IdentityHelper.GetCurrentUser(session);
-        if (firstRender)
+        var result = await session.GetAsync<bool>("admin");
+        admin = (bool)result.Value;
+        admin = state.Admin;
+        
+        if (!admin)
         {
-            var result = await session.GetAsync<bool>("admin");
-            admin = (bool)result.Value;
-            admin = state.Admin;
-            if (!admin)
-            {
-                NavigationManager.NavigateTo("");
-            }
-            ServiceResponse serviceResponse = new();
-            serviceResponse = await AdminLogService.GetItems();
-            if (serviceResponse.Success)
-            {
-                if (GeneralHelper.IsNotNull(serviceResponse.ResponseObject))
-                {
-                    lstAdminLogMessages = (List<AdminLogMessage>)serviceResponse.ResponseObject!;
-                }
-            }
-
-            dataLoaded = true;
-            StateHasChanged();
+            NavigationManager.NavigateTo("");
+            return;
         }
+
+        ServiceResponse serviceResponse = await AdminLogService.GetItems();
+        if (serviceResponse.Success && GeneralHelper.IsNotNull(serviceResponse.ResponseObject))
+        {
+            lstAdminLogMessages = (List<AdminLogMessage>)serviceResponse.ResponseObject!;
+        }
+
+        dataLoaded = true;
     }
 
     private void OnInstructionsClick()

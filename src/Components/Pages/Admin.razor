@@ -819,8 +819,8 @@
     
     protected override async Task OnInitializedAsync()
     {
-        currentuser = await IdentityHelper.GetCurrentUser(session);
-        appversion = ConfigurationHelper.GetAssemblyVersion();
+        @* currentuser = await IdentityHelper.GetCurrentUser(session);
+        appversion = ConfigurationHelper.GetAssemblyVersion(); *@
         releasenotesurl = "https://github.com/mspnp/AzureNamingTool/wiki/v" + appversion;
 
         servicesData = await ServicesHelper.LoadServicesData(servicesData, true);

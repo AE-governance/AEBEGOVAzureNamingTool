@@ -156,9 +156,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        currentuser = await IdentityHelper.GetCurrentUser(session);
-        var result = await session.GetAsync<bool>("admin");
-        admin = (bool)result.Value;
+        @* currentuser = await IdentityHelper.GetCurrentUser(session); *@
+        @* var result = await session.GetAsync<bool>("admin");
+        admin = (bool)result.Value; *@
         admin = state.Admin;
         
         if (!admin)

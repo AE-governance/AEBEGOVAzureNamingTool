@@ -858,7 +858,7 @@
             environmentvariables = ConfigurationHelper.GetEnvironmentVariables();
         }
 
-        await storage.SetAsync("apptheme", theme.ThemeStyle);
+        @* await storage.SetAsync("apptheme", theme.ThemeStyle); *@
         state.AppTheme = theme.ThemeStyle;
 
         var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);

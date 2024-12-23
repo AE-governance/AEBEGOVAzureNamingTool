@@ -781,7 +781,7 @@
     [CascadingParameter]
     public IModalService? Modal { get; set; }
     [CascadingParameter]
-    private IdentityProviderDetails identityProviderDetails { get; set; } = new();
+    private IdentityProviderDetails? identityProviderDetails { get; set; }
     private ServicesData servicesData = new();
     private string currentpassword = String.Empty;
     private string newpassword = String.Empty;
@@ -816,66 +816,58 @@
     private List<KeyValuePair<string, string>> environmentvariables = new();
     private string releasenotesurl = String.Empty;
     private long maxFileSize = 2000000;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    
+    protected override async Task OnInitializedAsync()
     {
         currentuser = await IdentityHelper.GetCurrentUser(session);
-        if (firstRender)
+        appversion = ConfigurationHelper.GetAssemblyVersion();
+        releasenotesurl = "https://github.com/mspnp/AzureNamingTool/wiki/v" + appversion;
+
+        servicesData = await ServicesHelper.LoadServicesData(servicesData, true);
+        admin = state.Admin;
+        if (admin)
         {
-            appversion = ConfigurationHelper.GetAssemblyVersion();
-            releasenotesurl = "https://github.com/mspnp/AzureNamingTool/wiki/v" + appversion;
-
-            servicesData = await ServicesHelper.LoadServicesData(servicesData, true);
-            var result = await session.GetAsync<bool>("admin");
-            admin = (bool)result.Value;
-            if (admin)
+            currentapikey = GeneralHelper.DecryptString(config.APIKey!, config.SALTKey!);
+            currentreadonlyapikey = GeneralHelper.DecryptString(config.ReadOnlyAPIKey!, config.SALTKey!);
+            // Determine if the version notification has been dismissed
+            @* var resultVersionAlert = await session.GetAsync<bool>("versionalert-" + appversion + "-shown"); *@
+            @* versionalertshown = resultVersionAlert.Success ? resultVersionAlert.Value : false; *@
+            @* versionalert = ConfigurationHelper.GetVersionAlert(true).Result; *@
+            duplicatenamesallowed = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("DuplicateNamesAllowed"));
+            connectivitycheckenabled = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("ConnectivityCheckEnabled"));
+            resourcetypeeditingallowed = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("ResourceTypeEditingAllowed"));
+            autoincrementresourceinstance = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("AutoIncrementResourceInstance")); 
+            instructionsenabled = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("InstructionsEnabled"));
+            generatednameslogenabled = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("GeneratedNamesLogEnabled"));
+            configurationenabled = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("ConfigurationEnabled"));
+            referenceenabled = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("ReferenceEnabled"));
+            latestnewsenabled = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("LatestNewsEnabled"));
+            retaingenerateselections = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("RetainGenerateSelections"));
+            customhomecontent = ConfigurationHelper.GetAppSetting("CustomHomeContent", false);
+            customlogopath = ConfigurationHelper.GetAppSetting("CustomLogoPath", false); 
+            customtoolname = ConfigurationHelper.GetAppSetting("CustomToolName", false);
+            currentgenerationwebhook = ConfigurationHelper.GetAppSetting("GenerationWebhook", true);
+            currentidentityheadername = ConfigurationHelper.GetAppSetting("IdentityHeaderName", true);
+            if (GeneralHelper.IsNotNull(identityProviderDetails))
             {
-                currentapikey = GeneralHelper.DecryptString(config.APIKey!, config.SALTKey!);
-                currentreadonlyapikey = GeneralHelper.DecryptString(config.ReadOnlyAPIKey!, config.SALTKey!);
-                // Determine if the version notification has been dismissed
-                var resultVersionAlert = await session.GetAsync<bool>("versionalert-" + appversion + "-shown");
-                versionalertshown = resultVersionAlert.Success ? resultVersionAlert.Value : false;
-                versionalert = ConfigurationHelper.GetVersionAlert(true).Result;
-                duplicatenamesallowed = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("DuplicateNamesAllowed"));
-                connectivitycheckenabled = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("ConnectivityCheckEnabled"));
-                resourcetypeeditingallowed = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("ResourceTypeEditingAllowed"));
-                autoincrementresourceinstance = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("AutoIncrementResourceInstance"));
-                instructionsenabled = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("InstructionsEnabled"));
-                generatednameslogenabled = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("GeneratedNamesLogEnabled"));
-                configurationenabled = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("ConfigurationEnabled"));
-                referenceenabled = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("ReferenceEnabled"));
-                latestnewsenabled = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("LatestNewsEnabled"));
-                retaingenerateselections = Convert.ToBoolean(ConfigurationHelper.GetAppSetting("RetainGenerateSelections"));
-                customhomecontent = ConfigurationHelper.GetAppSetting("CustomHomeContent", false);
-                //await mdCustomHomeContent.SetValueAsync(customhomecontent);
-                customlogopath = ConfigurationHelper.GetAppSetting("CustomLogoPath", false);
-                customtoolname = ConfigurationHelper.GetAppSetting("CustomToolName", false);
-                currentgenerationwebhook = ConfigurationHelper.GetAppSetting("GenerationWebhook", true);
-                currentidentityheadername = ConfigurationHelper.GetAppSetting("IdentityHeaderName", true);
-                if (GeneralHelper.IsNotNull(identityProviderDetails))
+                if (!String.IsNullOrEmpty(identityProviderDetails.CurrentIdentityProvider))
                 {
-                    if (!String.IsNullOrEmpty(identityProviderDetails.CurrentIdentityProvider))
-                    {
-                        currentidentityprovider = identityProviderDetails.CurrentIdentityProvider;
-                    }
-                }
-                environmentvariables = ConfigurationHelper.GetEnvironmentVariables();
-            }
-
-            await storage.SetAsync("apptheme", theme.ThemeStyle);
-            state.AppTheme = theme.ThemeStyle;
-
-            StateHasChanged();
-
-            var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
-            if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("reset", out var _reset))
-            {
-                if (Convert.ToBoolean(_reset))
-                {
-                    toastService.ShowSuccess("The site settings have been reset!");
+                    currentidentityprovider = identityProviderDetails.CurrentIdentityProvider;
                 }
             }
+            environmentvariables = ConfigurationHelper.GetEnvironmentVariables();
+        }
 
+        await storage.SetAsync("apptheme", theme.ThemeStyle);
+        state.AppTheme = theme.ThemeStyle;
+
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("reset", out var _reset))
+        {
+            if (Convert.ToBoolean(_reset))
+            {
+                toastService.ShowSuccess("The site settings have been reset!");
+            }
         }
     }
 
